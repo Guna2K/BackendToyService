@@ -18,7 +18,7 @@ PORT = 3033
 
  
 
-describe('Tests for getting toy details', () => {
+describe('Tests for endpoints', () => {
 
   it('should return toys for /toys/all/loc route!', (done) => {
 
@@ -33,6 +33,25 @@ describe('Tests for getting toy details', () => {
         expect(res).to.have.status(200);
 
         expect(res.body.message).to.equal('Fetch Successful');
+
+        done();
+
+      });
+
+  });
+
+
+  it('should return bad request for invalid calls', (done) => {
+
+    chai
+
+      .request(app)
+
+      .get('/toys/all/AUS')
+
+      .end((err, res) => {
+
+        expect(res).to.have.status(400);
 
         done();
 
