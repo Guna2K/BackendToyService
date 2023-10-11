@@ -18,9 +18,6 @@ const toyRoutes = require("./api/routes/toy.routes");
  
 
 app.use("", toyRoutes);
-
- 
-
 const port = 3033;
 app.listen(port,()=>{
     console.log("Toy Service is running"); 
