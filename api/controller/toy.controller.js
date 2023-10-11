@@ -31,10 +31,7 @@ exports.getToyDetails = (request, response) => {
     try {
       toyService.applyLocationSpecificLogic(location, toys);
     } catch (error) {
-      return response.status(400).json({
-        error: true,
-        message: error.message,
-      });
+      return response.status(400).send();
     }
   
     // Filter the toys based on query parameters
@@ -52,17 +49,12 @@ exports.getToyDetails = (request, response) => {
     }
   
     if (toys.length === 0) {
-      return response.status(204).json({
-        error: 'No Content',
-        message: 'Fetch Successful',
-        data: toys,
-      });
+      return response.status(204).send(toys);
+      }
+
+      return response.status(200).send(toys);
     }
   
-    return response.status(200).json({
-      error: false,
-      message: 'Fetch Successful',
-      data: toys,
-    });
-  };
+    
+
 
