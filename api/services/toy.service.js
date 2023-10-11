@@ -10,19 +10,19 @@ function applyLocationSpecificLogic(location, toys) {
   if (location === 'US-NC') {
     toys.forEach((toy) => {
       toy.price = (toy.price / 80 + 0.08 * toy.price / 80).toFixed(3);
-      toy.taxPercentage = 8;
+      toy.tax_percentage = 8;
       toy.price = parseFloat(toy.price);
     });
   } else if (location === 'IE') {
     toys.forEach((toy) => {
       toy.price = (1.23 * toy.price / 83.25).toFixed(3);
-      toy.taxPercentage = 23;
+      toy.tax_percentage = 23;
       toy.price = parseFloat(toy.price);
     });
   } else if (location === 'IN') {
     toys.forEach((toy) => {
       toy.price = (toy.price + 0.18 * toy.price).toFixed(3);
-      toy.taxPercentage = 18;
+      toy.tax_percentage = 18;
       toy.price = parseFloat(toy.price);
     });
   } else {
