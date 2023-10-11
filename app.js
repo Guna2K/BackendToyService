@@ -11,7 +11,7 @@ let toy = fs.readFileSync("./data/toys.json");
 let app = express();
 app.use(bodyParser.json());
 
- 
+module.exports = app; 
 
 const toyRoutes = require("./api/routes/toy.routes");
 
