@@ -1,200 +1,91 @@
 const chai = require('chai');
-
 const chaiHttp = require('chai-http');
-
-const app = require('../app'); 
-
+const app = require('../app'); // Import your Express app
 const expect = chai.expect;
 
- 
-
 chai.use(chaiHttp);
+const fs = require('fs');
 
- 
-``
-PORT = 3033
-
- 
-
- 
-
-describe('Tests for endpoints', () => {
-
-  it('should return toys for /toys/all/loc route!', (done) => {
-
+// Util function
+function loadToyData() {
+  const toyData = fs.readFileSync('./data/toys.json', 'utf8');
+  return JSON.parse(toyData);
+}
+describe('Controller Tests', () => {
+  it('should return team details with a 200 status code', (done) => {
     chai
-
       .request(app)
-
-      .get('/toys/all/IN')
-
-      .end((err, res) => {
-
-        expect(res).to.have.status(200);
-
-        expect(res.body.message).to.equal('Fetch Successful');
-
-        done();
-
-      });
-
-  });
-
-
-  it('should return bad request for invalid calls', (done) => {
-
-    chai
-
-      .request(app)
-
-      .get('/toys/all/AUS')
-
-      .end((err, res) => {
-
-        expect(res).to.have.status(400);
-
-        done();
-
-      });
-
-  });
-
- 
-
-  it('should return Success Response when /toys/team ', (done) => {
-
-    const expectedResponse = {
-
-      "team": "bike",
-
-      "membersNames": [
-
-          "Adarsh Singh",
-
-          "Guna M"
-
-      ]
-
-  }
-
-    chai
-
-      .request(app)
-
       .get('/toys/team')
-
       .end((err, res) => {
-
         expect(res).to.have.status(200);
-
-        expect(res.body.team).to.equal('awaraBackend');
-
+        expect(res.body).to.deep.equal({
+          team: 'awaraBackend',
+          memberNames: ['Adarsh Singh', 'Guna M'],
+        });
         done();
-
       });
-
   });
 
- 
+  it('should return toy details with a 200 status code for a valid location', (done) => {
+    chai
+      .request(app)
+      .get('/toys/all/IN')
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).length(loadToyData().length);
+        done();
+      });
+  });
 
-//   it('should return Success Response when /classA/food/team ', (done) => {
 
-//     chai
+  it('should return a 400 status code for an invalid location', (done) => {
+    chai
+      .request(app)
+      .get('/toys/all/INV')
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+      });
+      done();
+  });
 
-//       .request(app)
-
-//       .get('/classA/food/team')
-
-//       .end((err, res) => {
-
-//         expect(res).to.have.status(200);
-
-//         expect(res.body.team).to.equal('food');
-
-//         expect(res.body.membersNames).to.have.lengthOf.above(0);
-
-//         done();
-
-//       });
-
-//   });
-
- 
-
-//   it('should return Success Response when /classA/toys/team ', (done) => {
-
-//     chai
-
-//       .request(app)
-
-//       .get('/classA/toys/team')
-
-//       .end((err, res) => {
-
-//         expect(res).to.have.status(200);
-
-//         expect(res.body.team).to.equal('toys');
-
-//         expect(res.body.membersNames).to.have.lengthOf.above(0);
-
-//         done();
-
-//       });
-
-//   });
-
- 
-
-//   it('should return Invalid Service Name Response', (done) => {
-
-//     chai
-
-//       .request(app)
-
-//       .get('/classA/invalidServiceName/team')
-
-//       .end((err, res) => {
-
-//         expect(res).to.have.status(400);
-
-//         expect(res.body.error).to.equal( "Bad request: Service name does not exist!");
-
-//         done();
-
-//       });
-
-//   });
-
- 
-
- 
-
-//   xit('should return Axios Endpoint Down Response', (done) => {
-
-//     chai
-
-//       .request(app)
-
-//       .get('/classA/error')
-
-//       .end((err, res) => {
-
-//         expect(res).to.have.status(500);
-
-//         // expect(res.body.error).to.equal( "Unable to fetch data!");
-
-//         // expect(res.body.message).to.equal("Request failed with status code 404")
-
-//         done();
-
-//       });
-
-//   });
-
- 
-
-  
-
- 
-
+  it('should return a status 204 with bad filter when there is no product after filtering', (done) => {
+    chai
+      .request(app)
+      .get('/toys/all/IN?minprice=1000&maxprice=100')
+      .end((err, res) => {
+        expect(res).to.have.status(204);
+      });
+      done();
 });
+
+it('should return a status 200 with min and max filter', (done) => {
+  chai
+    .request(app)
+    .get('/toys/all/IN?minprice=100&maxprice=1000')
+    .end((err, res) => {
+      expect(res).to.have.status(200);
+      expect(res.body).length(6);
+    });
+    done();
+});
+it('should return a status 200 with min and max filter', (done) => {
+  chai
+    .request(app)
+    .get('/toys/all/IN?minprice=100&maxprice=1000')
+    .end((err, res) => {
+      expect(res).to.have.status(200);
+      expect(res.body).length(6);
+    });
+    done();
+});
+it('should return a status 204 with min, max, brand, rating filter', (done) => {
+  chai
+    .request(app)
+    .get('/toys/all/IN?minprice=100&maxprice=1000&brand=EnchantMe&rating=1')
+    .end((err, res) => {
+      expect(res).to.have.status(200);
+      expect(res.body).length(1);
+    });
+    done();
+});
+})

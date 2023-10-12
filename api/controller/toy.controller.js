@@ -31,7 +31,7 @@ exports.getToyDetails = (request, response) => {
     try {
       toyService.applyLocationSpecificLogic(location, toys);
     } catch (error) {
-      return response.status(400).send();
+      return response.status(400);
     }
   
     // Filter the toys based on query parameters
