@@ -14,7 +14,7 @@ const parsedToys = JSON.parse(toyData);
 exports.getTeamDetails = (request, response) => {
     return response.status(200).json({
         team : "awaraBackend",
-        memberNames : ["Adarsh Singh", "Guna M"]
+        membersNames : ["Adarsh Singh", "Guna M"]
     });
 };
 

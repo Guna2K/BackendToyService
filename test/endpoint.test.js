@@ -20,7 +20,7 @@ describe('Controller Tests', () => {
         expect(res).to.have.status(200);
         expect(res.body).to.deep.equal({
           team: 'awaraBackend',
-          memberNames: ['Adarsh Singh', 'Guna M'],
+          membersNames: ['Adarsh Singh', 'Guna M'],
         });
         done();
       });
